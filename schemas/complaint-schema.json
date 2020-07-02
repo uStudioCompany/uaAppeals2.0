@@ -1,0 +1,621 @@
+{
+  "definitions": {
+    "Complaint": {
+      "title": "Скарга",
+      "description": "Скарга, подана у відношенні умов тендеру чи прийнятих Замовником рішень",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор запису",
+          "description": "Унікальний системний ідентифікатор запису про скаргу",
+          "type": "string"
+        },
+        "date": {
+          "title": "Дата",
+          "description": "Дата публікації останньої оновленої інформації про скаргу ",
+          "type": "string",
+          "format": "datetime"
+        },
+        "status": {
+          "title": "Статус",
+          "description": "Поточний статус скарги згідно з переліком значень, що допускається",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/complaintStatuses.csv",
+          "type": "string"
+        },
+        "satisfied": {
+          "title": "Статус задоволення скарги",
+          "description": "Статус, що відображає, чи була скарга задоволена Органом оскарження",
+          "type": "boolean"
+        },
+        "type": {
+          "title": "",
+          "description": "",
+          "type": "string",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/complaintTypes.csv"
+        },
+        "internalId": {
+          "title": "Ідентифікатор скарги",
+          "description": "Унікальний публічний ідентифікатор скаргуи",
+          "type": "string"
+        },
+        "title": {
+          "title": "Заголовок скарги",
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "title": "Опис скарги",
+          "description": "",
+          "type": "string"
+        },
+        "author": {
+          "title": "Скаржник",
+          "description": "Організація, яка подає скаргу",
+          "$ref": "#/definitions/Organization"
+        },
+        "milestones": {
+          "title": "Віхи",
+          "description": "Перелік базових віх скарги: оплата за подання, подання, розгляд і т.д.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Milestone"
+          }
+        },
+        "documents": {
+          "title": "Документи",
+          "description": "Документи скарги",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "objections": {
+          "title": "Вимоги",
+          "description": "Вимоги, що висуваються Скаржником в рамках скарги",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Objection"
+          }
+        },
+        "relatedProcesses": {
+          "title": "Пов'язані процеси",
+          "description": "Процеси, що пов'язані зі скаргою: тендерна процедура, попередня скарга, процедура розгляду скарги",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedProcess"
+          }
+        }
+      }
+    },
+    "Objection": {
+      "title": "Заперечення",
+      "descrition": "зепереечння, що висловлює Скаржник в рамках скарги",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор заперечення",
+          "type": "string"
+        },
+        "title": {
+          "title": "Назва заперечення",
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "title": "Опис заперечення",
+          "description": "",
+          "type": "string"
+        },
+        "status": {
+          "title": "Статус",
+          "description": "Статус заперечення",
+          "type": "string",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/objectionStatuses.csv"
+        },
+        "relatesTo": {
+          "title": "Тип пов'яазного елемента",
+          "description": "Код типа елемента, у відношені якого висловлюється заперечення",
+          "type": "string",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/objectionRelatesToValues.csv"
+        },
+        "relatedItem": {
+          "title": "Ідентифікатор по'язаного елемента",
+          "description": "Унікальний ідентифікатор по'язаного елемента відповідно до коду",
+          "type": "string"
+        },
+        "classification": {
+          "title": "Класифікація суті заперечення",
+          "descrition": "Класифікація суті заперечення згідно довідника",
+          "$ref": "#/definitions/Classification"
+        },
+        "arguments": {
+          "title": "Аргументи",
+          "description": "Аргументи Скаржника на користь заперечення",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Argument"
+          }
+        },
+        "requestedRemedies": {
+          "title": "Запитувані заходи",
+          "description": "Перелік заходів, які Скаржник вимагає від Органу оскарження в рамках заперечення",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Remedy"
+          }
+        }
+      }
+    },
+    "Organization": {
+      "title": "Організація",
+      "description": "Органіазція, задіяна в процесі в той чи інший спосіб",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор організації",
+          "description": "Унікальний ідентифікатор організації в системі Прозорро. Наразі реалізуються як конкатенація значень 'identifier.scheme' та 'identifier.id'",
+          "type": "string"
+        },
+        "contactPoint": {
+          "title": "Контактна особа",
+          "description": "Дані особи, що представляє цю організацію в якості контакту",
+          "$ref": "#/definitions/ContactPoint"
+        },
+        "identifier": {
+          "title": "Ідентифікатор органіазції",
+          "description": "Публічний ідентифікатор організації з офіційного реєстру",
+          "$ref": "#/definitions/Identifier"
+        },
+        "name": {
+          "title": "Назва",
+          "description": "Назва організації",
+          "type": "string"
+        },
+        "address": {
+          "title": "Адреса",
+          "description": "Адреса організації",
+          "$ref": "#/definitions/Address"
+        },
+        "persones": {
+          "title": "Персони",
+          "description": "Перелік персон, що уповноважені діяти від імені організації із визначеною роллю",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
+        }
+      }
+    },
+    "Address": {
+      "title": "Адреса",
+      "description": "Об'єкт що описує адресу як атрибут",
+      "type": "object",
+      "properties": {
+        "streetAddress": {
+          "title": "Адреса",
+          "description": "Адреса в населеному пункті: назва вулиці, номер будівлі, поверху, приміщення",
+          "type": "string"
+        },
+        "locality": {
+          "title": "Населений пункт",
+          "type": "string",
+          "description": "Назва населеного пункту"
+        },
+        "region": {
+          "title": "Регіон, область",
+          "type": "string",
+          "description": "Назва регіону, області"
+        },
+        "postalCode": {
+          "title": "Поштовий індекс",
+          "type": "string",
+          "description": "Поштовий індекс"
+        },
+        "countryName": {
+          "title": "Країна",
+          "type": "string",
+          "description": "Назва країни"
+        }
+      }
+    },
+    "ContactPoint": {
+      "title": "Контактна особа",
+      "type": "object",
+      "description": "Дані особи, що представляє цю організацію в якості контакту",
+      "properties": {
+        "id": {
+          "description": "Ідентифікаційний код особи",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "description": "Повне ім'я особи"
+        },
+        "email": {
+          "title": "Email",
+          "type": "string",
+          "description": "Адреса електронної пошти особи"
+        },
+        "telephone": {
+          "title": "Telephone",
+          "type": "string",
+          "description": "Контактний номер телефону особи"
+        }
+      }
+    },
+    "Identifier": {
+      "title": "Ідентифікатор",
+      "description": "Ідентифікатор певного об'єкту в використовуному реєстрі",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Код ідентифікатора",
+          "description": "",
+          "type": "string"
+        },
+        "scheme": {
+          "title": "Код реєстру",
+          "description": "",
+          "type": "string"
+        },
+        "legalName": {
+          "title": "Офіційна назва в реєстрі",
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Milestone": {
+      "title": "Віха",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор віхи",
+          "type": "string"
+        },
+        "title": {
+          "title": "Назва",
+          "description": "Назва віхи",
+          "type": "string"
+        },
+        "type": {
+          "title": "Тип віхи",
+          "description": "Тип віхи з переліка можливих значень",
+          "type": "string",
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/complaintMilestoneTypes.csv",
+          "opencodelist": true
+        },
+        "description": {
+          "title": "Опис віхи",
+          "description": "Опис віхи",
+          "type": "string"
+        },
+        "dueDate": {
+          "title": "Кінцева дата",
+          "description": "Дата до якої віха має закінчитися",
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateMet": {
+          "format": "date-time",
+          "title": "Дата завершення",
+          "description": "Дата фактичного завершення віхи",
+          "type": "string"
+        },
+        "dateModified": {
+          "title": "Дата модифікації",
+          "description": "Дата, коли фіху було змінено, оновлено",
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "title": "Статус",
+          "description": "Статус віхи з переліка можливих значень",
+          "type": "string",
+          "codelist": "https://standard.open-contracting.org/1.1/en/schema/codelists/#milestone-status",
+          "openCodelist": false
+        },
+        "additionalInformation": {
+          "title": "Додаткова інформація",
+          "description": "Будь-яка додаткова інформація щодо віхи",
+          "type": "string"
+        }
+      }
+    },
+    "Document": {
+      "title": "Документ",
+      "description": "Документ, що відноситься до тої чи іншої сутності в рамках процесу",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор документа",
+          "type": "string"
+        },
+        "documentType": {
+          "title": "Тип документа",
+          "description": "Тип документа з переліку можливих значень",
+          "opencodelist": false,
+          "codelist": "",
+          "type": "string"
+        },
+        "title": {
+          "title": "Назва документа",
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "title": "Короткий опис документа",
+          "description": "",
+          "type": "string"
+        },
+        "url": {
+          "title": "Посилання",
+          "description": "Пряме посилання на документ чи додаток.",
+          "type": "string"
+        },
+        "datePublished": {
+          "title": "Дата публікації",
+          "description": "Дата, коли документ був опублікований вперше",
+          "type": "string"
+        },
+        "dateModified": {
+          "title": "Дата модифікації",
+          "description": "Дата, коли документ був змінений востаннє",
+          "type": "string"
+        },
+        "format": {
+          "title": "Формат документа",
+          "description": "Формат документа зі списку кодів IANA Media Types, з одним додатковим значенням ‘offline/print’, що буде використовуватись, коли запис цього документа використовується для опису офлайнової публікації документа",
+          "type": "string"
+        },
+        "language": {
+          "title": "Мова документа",
+          "description": "Вказує мову документа, використовуючи або двоцифровий код ISO 639-1, або розширений BCP47 language tags",
+          "type": "string"
+        },
+        "documentOf": {
+          "title": "Приналежність документа",
+          "description": "",
+          "type": "string",
+          "enum": [
+            "tender",
+            "item",
+            "lot"
+          ]
+        },
+        "author": {
+          "title": "Автор документа",
+          "description": "Код автора докуента. Для докуемнтів скарги - \"complaint_owner\"",
+          "type": "string"
+        }
+      }
+    },
+    "Classification": {
+      "title": "",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "title": "Схема класифікації",
+          "description": "Класифікація повинна бути взята з існуючої схеми або списку кодів. Це поле використовується, щоб вказати схему/список кодів, з яких буде братись класифікація. Для класифікацій лінійних елементів це значення повинно представляти відому Схему Класифікації Елементів, де це можливо",
+          "type": "string",
+          "codelist": "http://standard.open-contracting.org/1.1/en/schema/codelists/#item-classification-scheme",
+          "openCodelist": true
+        },
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Код класифікації взятий з вибраної схеми",
+          "type": "string"
+        },
+        "description": {
+          "title": "Опис",
+          "description": "Текстовий опис або назва коду",
+          "type": "string"
+        },
+        "uri": {
+          "title": "Посилання",
+          "description": "URI для ідентифікації коду. Якщо індивідуальні URI не доступні для елементів у схемі ідентифікації це значення треба залишити пустим.",
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "Argument": {
+      "title": "Аргумент",
+      "descrition": "Аргумент, що долучається Скаржником в якості обгрунтування заперечення як частини скарги",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор аргумента",
+          "type": "string"
+        },
+        "relatedJustification": {
+          "title": "Посилання на обгрунтування",
+          "description": "Де аргумент висувається в рамках заперечення рішення Замовника, цей атрибут має бути використано з метою вкаання конкретного обгрунтування рішення Замовником",
+          "type": "string"
+        },
+        "description": {
+          "title": "Опис аргумента",
+          "description": "",
+          "type": "string"
+        },
+        "evidences": {
+          "title": "Докази",
+          "description": "Перелік доказів, що долучається Скаржником до аргументу",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Evidence"
+          }
+        }
+      }
+    },
+    "Remedy": {
+      "title": "",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор запиту",
+          "type": "string"
+        },
+        "type": {
+          "title": "Тип запиту",
+          "description": "",
+          "type": "string",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/remedyTypes.csv"
+        },
+        "description": {
+          "title": "Опис запиту",
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "RelatedProcess": {
+      "title": "Пов'язаний процес",
+      "description": "Посилання на деталі процесу, що в той чи інший спосіб пов'яаний з поточним",
+      "type": "object",
+      "properties": {
+        "uri": {
+          "format": "uri",
+          "title": "Посилання",
+          "description": "",
+          "type": "string"
+        },
+        "id": {
+          "title": "Ідентифікатор",
+          "type": "string",
+          "description": "Унікальний ідентифікатор пов'язаного процесу"
+        },
+        "relationship": {
+          "title": "Тип зв'зку",
+          "items": {
+            "type": "string"
+          },
+          "description": "Код, що відображає тип зв'язку між поточним процесом і пов'яаним",
+          "type": "array",
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/complaintRelatedProcessRelationshipCodes.csv",
+          "opencodelist": true
+        }
+      }
+    },
+    "Person": {
+      "title": "Персона",
+      "description": "Персона, що представляє ту чи іншу організацію в рамках поточного процесу",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор персони",
+          "description": "Унікальний ідентифікатор персони в системі Прозорро. Наразі реалізуються як конкатенація значень 'identifier.scheme' та 'identifier.id'",
+          "type": "object"
+        },
+        "name": {
+          "title": "Повне ім'я персони",
+          "description": "",
+          "type": "object"
+        },
+        "email": {
+          "title": "Електронна пошта",
+          "description": "Адреса електронної пошти персони",
+          "type": "string"
+        },
+        "telephone": {
+          "title": "",
+          "description": "Контактний номер телефону пеорсони",
+          "type": "string"
+        },
+        "identifier": {
+          "title": "Офіційний ідентифікатор",
+          "description": "Офіційний ідентифікатор персони з реєстру",
+          "type": "object",
+          "$ref": "#/definitions/Identifier"
+        },
+        "businessFunctions": [
+          {
+            "title": "Бізнес-функції",
+            "description": "Бінес функції персони в процесі",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/BusinessFunction"
+            }
+          }
+        ]
+      }
+    },
+    "BusinessFunction": {
+      "title": "БІзнес-функція",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "title": "Код функції",
+          "description": "Код функції з переліку значень",
+          "type": "string",
+          "opencodelist": true,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/businessFunctionTypes.csv"
+        },
+        "jobTitle": {
+          "title": "Назва функціх",
+          "description": "Опис фукнції відповідно до офіційного довідника",
+          "type": "object",
+          "$ref": "#/definitions/Classification"
+        },
+        "documents": {
+          "type": "array",
+          "title": "Авториуючі документи",
+          "descriptiopn": "Документи, що підтверджують особу та/чи повноваження персони",
+          "items": [
+            {
+              "$ref": "#/definitions/Document"
+            }
+          ]
+        }
+      }
+    },
+    "Evidence": {
+      "title": "Доказ",
+      "description": "Ынформація, що надається в якості доказу",
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Ідентифікатор",
+          "description": "Унікальний ідентифікатор доказу",
+          "type": "string"
+        },
+        "type": {
+          "title": "Тип",
+          "description": "Тип доказу у вигляді коду з переліку",
+          "type": "string",
+          "opencodelist": false,
+          "codelist": "https://github.com/uStudioCompany/uaAppeals2.0/blob/master/codelists/evidenceTypes.csv"
+        },
+        "title": {
+          "title": "Назва доказу ",
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "title": "Опис доказу",
+          "description": "",
+          "type": "string"
+        },
+        "relatedDocument": {
+          "title": "Реквізити документа",
+          "description": "Реквізити документа: в системі чи зовнішнього",
+          "$ref": "#/definitions/Document"
+        }
+      }
+    }
+  }
+}
